@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calculation History</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+
+        <a href="{{ url_for('home') }}" class="back-btn">←</a>
+        <div class="logo">
+            Material Calculator
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">Home</a>
+            <a href="/pre-production">Pre-Production</a>
+            <a href="/normal-calculator">Normal Calculator</a>
+            <a href="/materials">Materials</a>
+            <a href="/history">History</a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="page-container">
+
+        <div class="form-card">
+
+            <h1>Calculation History</h1>
+
+            <p class="description">
+                View your previous material calculations.
+            </p>
+
+
+            {% if history %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Type</th>
+                        <th>Product</th>
+                        <th>Material</th>
+                        <th>Quantity</th>
+                        <th>Price/Unit</th>
+                        <th>Total</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in history %}
+
+                    <tr>
+
+                        <td>
+                            {{ item.calculation_type }}
+                        </td>
+
+                        <td>
+                            {% if item.product_name %}
+                            {{ item.product_name }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ item.material_name }}
+                        </td>
+
+                        <td>
+                            {{ item.quantity }}
+                        </td>
+
+                        <td>
+                            ₹{{ "%.2f"|format(item.price_per_unit) }}
+                        </td>
+
+                        <td>
+                            <strong>
+                                ₹{{ "%.2f"|format(item.total_cost) }}
+                            </strong>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty-history">
+
+                <h3>No Calculation History</h3>
+
+                <p>
+                    Your calculations will appear here.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

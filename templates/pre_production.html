@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pre-Production Calculator</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+     NAVBAR
+====================================================== -->
+
+    <nav class="navbar">
+
+
+        <a href="{{ url_for('home') }}" class="back-btn">←</a>
+        <div class="logo">
+            Material Calculator
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">Home</a>
+
+            <a href="/pre-production">
+                Pre-Production
+            </a>
+
+            <a href="/normal-calculator">
+                Normal Calculator
+            </a>
+
+            <a href="/materials">
+                Materials
+            </a>
+
+            <a href="/history">
+                History
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+     PAGE CONTAINER
+====================================================== -->
+
+    <div class="page-container">
+
+
+        <div class="form-card">
+
+            <h1>Pre-Production Calculator</h1>
+
+            <p class="description">
+
+                Calculate the material required and estimated
+                cost before creating your product.
+
+            </p>
+
+
+            <!-- =================================================
+             ERROR MESSAGE
+        ================================================== -->
+
+            {% if error %}
+
+            <div class="error-message">
+
+                {{ error }}
+
+            </div>
+
+            {% endif %}
+
+
+
+            <!-- =================================================
+             STEP 1
+             BASIC INFORMATION + METHOD
+        ================================================== -->
+
+            {% if not selected_method %}
+
+            <form method="POST">
+
+                <input type="hidden" name="action" value="select_method">
+
+
+                <!-- PRODUCT INFORMATION -->
+
+                <h2>Product Information</h2>
+
+
+                <label for="product_name">
+                    Product Name
+                </label>
+
+                <input id="product_name" type="text" name="product_name" placeholder="Example: Wooden Table" required>
+
+
+                <label for="production_quantity">
+                    Production Quantity
+                </label>
+
+                <input id="production_quantity" type="number" name="production_quantity" min="1" step="any"
+                    placeholder="Example: 10" required>
+
+
+
+                <!-- MATERIAL INFORMATION -->
+
+                <h2 class="section-title">
+                    Material Information
+                </h2>
+
+
+                <label for="material_name">
+                    Material Name
+                </label>
+
+                <input id="material_name" type="text" name="material_name" placeholder="Example: Wood" required>
+
+
+                <label for="unit">
+                    Material Unit
+                </label>
+
+                <select id="unit" name="unit" required>
+
+                    <option value="">
+                        Select Unit
+                    </option>
+
+                    <option value="sq ft">
+                        Square Feet (sq ft)
+                    </option>
+
+                    <option value="sq m">
+                        Square Meter (sq m)
+                    </option>
+
+                    <option value="cubic ft">
+                        Cubic Feet (cu ft)
+                    </option>
+
+                    <option value="cubic m">
+                        Cubic Meter (cu m)
+                    </option>
+
+                    <option value="kg">
+                        Kilogram (kg)
+                    </option>
+
+                    <option value="gram">
+                        Gram
+                    </option>
+
+                    <option value="litre">
+                        Litre
+                    </option>
+
+                    <option value="ml">
+                        Millilitre
+                    </option>
+
+                    <option value="piece">
+                        Piece
+                    </option>
+
+                    <option value="meter">
+                        Meter
+                    </option>
+
+                </select>
+
+
+
+                <!-- CALCULATION METHOD -->
+
+                <h2 class="section-title">
+                    Calculation Method
+                </h2>
+
+
+                <label for="calculation_method">
+                    Select Calculation Method
+                </label>
+
+
+                <select id="calculation_method" name="calculation_method" required>
+
+                    <option value="">
+                        Select Method
+                    </option>
+
+                    <option value="manual">
+                        Manual Quantity
+                    </option>
+
+                    <option value="area">
+                        Area - Length × Width
+                    </option>
+
+                    <option value="volume">
+                        Volume - Length × Width × Height
+                    </option>
+
+                    <option value="thickness">
+                        Thickness - Length × Width × Thickness
+                    </option>
+
+                    <option value="pieces">
+                        Pieces
+                    </option>
+
+                </select>
+
+
+                <p class="form-note">
+
+                    First select how you want to calculate the
+                    material required per product.
+
+                </p>
+
+
+                <button type="submit">
+
+                    Continue
+
+                </button>
+
+            </form>
+
+
+            {% endif %}
+
+
+
+            <!-- =================================================
+             STEP 2
+             SELECTED CALCULATION
+        ================================================== -->
+
+            {% if selected_method %}
+
+            <form method="POST">
+
+                <input type="hidden" name="action" value="calculate">
+
+
+                <!-- BASIC INFORMATION -->
+
+                <input type="hidden" name="product_name" value="{{ product_name }}">
+
+                <input type="hidden" name="production_quantity" value="{{ production_quantity }}">
+
+                <input type="hidden" name="material_name" value="{{ material_name }}">
+
+                <input type="hidden" name="unit" value="{{ unit }}">
+
+                <input type="hidden" name="calculation_method" value="{{ selected_method }}">
+
+
+
+                <!-- =================================================
+                 SELECTED INFORMATION
+            ================================================== -->
+
+                <div class="selected-info">
+
+                    <strong>
+                        Product:
+                    </strong>
+
+                    {{ product_name }}
+
+                    <br>
+
+
+                    <strong>
+                        Production Quantity:
+                    </strong>
+
+                    {{ production_quantity }}
+
+                    <br>
+
+
+                    <strong>
+                        Material:
+                    </strong>
+
+                    {{ material_name }}
+
+                    <br>
+
+
+                    <strong>
+                        Unit:
+                    </strong>
+
+                    {{ unit }}
+
+                </div>
+
+
+
+                <!-- =================================================
+                 METHOD 1: MANUAL
+            ================================================== -->
+
+                {% if selected_method == "manual" %}
+
+                <h2>
+                    Manual Material Calculation
+                </h2>
+
+
+                <p class="form-note">
+
+                    Enter the material required for one product.
+
+                </p>
+
+
+                <label for="manual_quantity">
+                    Material Required Per Product
+                </label>
+
+                <input id="manual_quantity" type="number" name="manual_quantity" min="0" step="any"
+                    placeholder="Example: 8" required>
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                 METHOD 2: AREA
+            ================================================== -->
+
+                {% if selected_method == "area" %}
+
+                <h2>
+                    Area Calculation
+                </h2>
+
+
+                <p class="formula">
+
+                    Area = Length × Width
+
+                </p>
+
+
+                <label for="area_length">
+                    Length
+                </label>
+
+                <input id="area_length" type="number" name="length" min="0" step="any" placeholder="Example: 8"
+                    required>
+
+
+                <label for="area_width">
+                    Width
+                </label>
+
+                <input id="area_width" type="number" name="width" min="0" step="any" placeholder="Example: 4" required>
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                 METHOD 3: VOLUME
+            ================================================== -->
+
+                {% if selected_method == "volume" %}
+
+                <h2>
+                    Volume Calculation
+                </h2>
+
+
+                <p class="formula">
+
+                    Volume = Length × Width × Height
+
+                </p>
+
+
+                <label for="volume_length">
+                    Length
+                </label>
+
+                <input id="volume_length" type="number" name="length" min="0" step="any" placeholder="Example: 4"
+                    required>
+
+
+                <label for="volume_width">
+                    Width
+                </label>
+
+                <input id="volume_width" type="number" name="width" min="0" step="any" placeholder="Example: 2"
+                    required>
+
+
+                <label for="height">
+                    Height
+                </label>
+
+                <input id="height" type="number" name="height" min="0" step="any" placeholder="Example: 1" required>
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                 METHOD 4: THICKNESS
+            ================================================== -->
+
+                {% if selected_method == "thickness" %}
+
+                <h2>
+                    Thickness Calculation
+                </h2>
+
+
+                <p class="formula">
+
+                    Volume = Length × Width × Thickness
+
+                </p>
+
+
+                <label for="thickness_length">
+                    Length
+                </label>
+
+                <input id="thickness_length" type="number" name="length" min="0" step="any" placeholder="Example: 10"
+                    required>
+
+
+                <label for="thickness_width">
+                    Width
+                </label>
+
+                <input id="thickness_width" type="number" name="width" min="0" step="any" placeholder="Example: 5"
+                    required>
+
+
+                <label for="thickness">
+                    Thickness
+                </label>
+
+                <input id="thickness" type="number" name="thickness" min="0" step="any" placeholder="Example: 0.5"
+                    required>
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                 METHOD 5: PIECES
+            ================================================== -->
+
+                {% if selected_method == "pieces" %}
+
+                <h2>
+                    Pieces Calculation
+                </h2>
+
+
+                <p class="formula">
+
+                    Total Pieces =
+                    Pieces Per Product × Production Quantity
+
+                </p>
+
+
+                <label for="pieces_per_product">
+                    Pieces Required Per Product
+                </label>
+
+                <input id="pieces_per_product" type="number" name="pieces_per_product" min="0" step="any"
+                    placeholder="Example: 20" required>
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                 MATERIAL PRICE
+            ================================================== -->
+
+                <h2 class="section-title">
+                    Material Price
+                </h2>
+
+
+                <p class="form-note">
+
+                    Enter the quantity of material you purchased
+                    and the total amount you paid. The application
+                    will calculate the price per unit automatically.
+
+                </p>
+
+
+                <label for="purchased_quantity">
+                    Purchased Material Quantity
+                </label>
+
+                <input id="purchased_quantity" type="number" name="purchased_quantity" min="0.0001" step="any"
+                    placeholder="Example: 100" required>
+
+
+                <label for="total_material_price">
+                    Total Material Price (₹)
+                </label>
+
+                <input id="total_material_price" type="number" name="total_material_price" min="0" step="0.01"
+                    placeholder="Example: 5000" required>
+
+
+                <p class="formula">
+
+                    Price Per Unit =
+                    Total Material Price ÷ Purchased Material Quantity
+
+                </p>
+
+
+
+                <!-- =================================================
+                 WASTAGE
+            ================================================== -->
+
+                <label for="wastage_percent">
+                    Wastage Percentage (%)
+                </label>
+
+                <input id="wastage_percent" type="number" name="wastage_percent" min="0" step="0.01" value="0"
+                    placeholder="Example: 10" required>
+
+
+                <p class="form-note">
+
+                    Example: Enter 10 for 10% material wastage.
+
+                </p>
+
+
+
+                <!-- =================================================
+                 CALCULATE
+            ================================================== -->
+
+                <button type="submit">
+
+                    Calculate
+
+                </button>
+
+
+                <a href="/pre-production" class="back-button">
+
+                    ← Change Calculation Method
+
+                </a>
+
+            </form>
+
+            {% endif %}
+
+
+
+            <!-- =================================================
+             RESULT
+        ================================================== -->
+
+            {% if result %}
+
+            <div class="result-card">
+
+                <h2>
+                    Calculation Result
+                </h2>
+
+
+                <div class="result-row">
+
+                    <span>
+                        Product
+                    </span>
+
+                    <strong>
+                        {{ result.product_name }}
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        Production Quantity
+                    </span>
+
+                    <strong>
+                        {{ result.production_quantity }}
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        Material
+                    </span>
+
+                    <strong>
+                        {{ result.material_name }}
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        Calculation Method
+                    </span>
+
+                    <strong>
+
+                        {% if result.calculation_method == "manual" %}
+
+                        Manual Quantity
+
+                        {% elif result.calculation_method == "area" %}
+
+                        Area
+
+                        {% elif result.calculation_method == "volume" %}
+
+                        Volume
+
+                        {% elif result.calculation_method == "thickness" %}
+
+                        Thickness
+
+                        {% elif result.calculation_method == "pieces" %}
+
+                        Pieces
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        Material Per Product
+                    </span>
+
+                    <strong>
+
+                        {{ "%.2f"|format(
+                        result.material_per_product
+                        ) }}
+
+                        {{ result.unit }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        Production Quantity
+                    </span>
+
+                    <strong>
+
+                        {{ result.production_quantity }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        Total Material Before Wastage
+                    </span>
+
+                    <strong>
+
+                        {{ "%.2f"|format(
+                        result.total_material
+                        ) }}
+
+                        {{ result.unit }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        Wastage
+                    </span>
+
+                    <strong>
+
+                        {{ "%.2f"|format(
+                        result.wastage_percent
+                        ) }}%
+
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        Wastage Amount
+                    </span>
+
+                    <strong>
+
+                        {{ "%.2f"|format(
+                        result.wastage_amount
+                        ) }}
+
+                        {{ result.unit }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        Final Material Required
+                    </span>
+
+                    <strong>
+
+                        {{ "%.2f"|format(
+                        result.final_material
+                        ) }}
+
+                        {{ result.unit }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        Price Per Unit
+                    </span>
+
+                    <strong>
+
+                        ₹{{ "%.2f"|format(
+                        result.price_per_unit
+                        ) }}
+
+                        / {{ result.unit }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="total-row">
+
+                    <span>
+                        Total Estimated Cost
+                    </span>
+
+                    <strong>
+
+                        ₹{{ "%.2f"|format(
+                        result.total_cost
+                        ) }}
+
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Materials</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+
+        <a href="{{ url_for('home') }}" class="back-btn">←</a>
+        <div class="logo">
+            Material Calculator
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">Home</a>
+            <a href="/pre-production">Pre-Production</a>
+            <a href="/normal-calculator">Normal Calculator</a>
+            <a href="/materials">Materials</a>
+            <a href="/history">History</a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="page-container">
+
+        <div class="form-card">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Material Management</h1>
+
+                    <p class="description">
+                        Manage your materials and prices.
+                    </p>
+
+                </div>
+
+                <a href="/add-material" class="button">
+
+                    + Add Material
+
+                </a>
+
+            </div>
+
+
+            {% if materials %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Material</th>
+                        <th>Unit</th>
+                        <th>Price</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for material in materials %}
+
+                    <tr>
+
+                        <td>
+                            {{ material.id }}
+                        </td>
+
+                        <td>
+                            {{ material.name }}
+                        </td>
+
+                        <td>
+                            {{ material.unit }}
+                        </td>
+
+                        <td>
+                            ₹{{ "%.2f"|format(material.price) }}
+                        </td>
+
+                        <td>
+
+                            <a href="/delete-material/{{ material.id }}" class="delete-button">
+                                Delete
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty-history">
+
+                <h3>No Materials Added</h3>
+
+                <p>
+                    Click "Add Material" to add your first material.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

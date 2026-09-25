@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Material Cost Calculator</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Material Calculator Logo">
+            <span>Material Calculator</span>
+        </div>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/pre-production">Pre-Production</a>
+            <a href="/normal-calculator">Normal Calculator</a>
+            <a href="/materials">Materials</a>
+            <a href="/history">History</a>
+        </div>
+
+    </nav>
+
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>Material Cost Calculator</h1>
+
+            <p>
+                Calculate material requirements and costs
+                quickly and accurately.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="/pre-production" class="button">
+                    Pre-Production Calculator
+                </a>
+
+                <a href="/normal-calculator" class="button secondary">
+                    Normal Calculator
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="calculator-section">
+
+        <h2>Choose Your Calculator</h2>
+
+        <div class="card-container">
+
+            <div class="card">
+
+                <div class="card-icon">🏭</div>
+
+                <h3>Pre-Production Calculator</h3>
+
+                <p>
+                    Calculate the total material required
+                    and estimated cost before creating a product.
+                </p>
+
+                <a href="/pre-production" class="card-button">
+                    Start Calculation
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">🧮</div>
+
+                <h3>Normal Material Calculator</h3>
+
+                <p>
+                    Calculate the cost of material based
+                    on quantity and price per unit.
+                </p>
+
+                <a href="/normal-calculator" class="card-button">
+                    Start Calculation
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">📦</div>
+
+                <h3>Material Management</h3>
+
+                <p>
+                    Manage your materials, units and
+                    material prices.
+                </p>
+
+                <a href="/materials" class="card-button">
+                    View Materials
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</body>
+
+</html>

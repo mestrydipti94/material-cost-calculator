@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Material</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+
+        <a href="{{ url_for('home') }}" class="back-btn">←</a>
+        <div class="logo">
+            Material Calculator
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">Home</a>
+
+            <a href="/pre-production">
+                Pre-Production
+            </a>
+
+            <a href="/normal-calculator">
+                Normal Calculator
+            </a>
+
+            <a href="/materials">
+                Materials
+            </a>
+
+            <a href="/history">
+                History
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="page-container">
+
+        <div class="form-card">
+
+            <h1>Add Material</h1>
+
+            <p class="description">
+                Add a material to your material database.
+            </p>
+
+
+            <form method="POST">
+
+                <label>Material Name</label>
+
+                <input type="text" name="name" placeholder="Example: Wood" required>
+
+
+                <label>Unit</label>
+
+                <input type="text" name="unit" placeholder="Example: sq ft" required>
+
+
+                <label>Price Per Unit (₹)</label>
+
+                <input type="number" name="price" min="0" step="0.01" placeholder="Example: 120" required>
+
+
+                <button type="submit">
+                    Save Material
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

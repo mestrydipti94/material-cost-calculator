@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Normal Material Calculator</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+
+        <a href="{{ url_for('home') }}" class="back-btn">←</a>
+        <div class="logo">
+            Material Calculator
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">Home</a>
+
+            <a href="/pre-production">
+                Pre-Production
+            </a>
+
+            <a href="/normal-calculator">
+                Normal Calculator
+            </a>
+
+            <a href="/materials">
+                Materials
+            </a>
+
+            <a href="/history">
+                History
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="page-container">
+
+        <div class="form-card">
+
+            <h1>Normal Material Calculator</h1>
+
+            <p class="description">
+                Calculate the cost of a material using
+                quantity and price per unit.
+            </p>
+
+
+            <form method="POST">
+
+                <label>Material Name</label>
+
+                <input type="text" name="material_name" placeholder="Example: Wood" required>
+
+
+                <label>Quantity</label>
+
+                <input type="number" name="quantity" min="0" step="any" placeholder="Example: 15" required>
+
+
+                <label>Price Per Unit (₹)</label>
+
+                <input type="number" name="price_per_unit" min="0" step="0.01" placeholder="Example: 120" required>
+
+
+                <button type="submit">
+                    Calculate Cost
+                </button>
+
+            </form>
+
+        </div>
+
+
+        {% if result %}
+
+        <div class="result-card">
+
+            <h2>Calculation Result</h2>
+
+            <div class="result-row">
+
+                <span>Material</span>
+
+                <strong>
+                    {{ result.material_name }}
+                </strong>
+
+            </div>
+
+
+            <div class="result-row">
+
+                <span>Quantity</span>
+
+                <strong>
+                    {{ result.quantity }}
+                </strong>
+
+            </div>
+
+
+            <div class="result-row">
+
+                <span>Price Per Unit</span>
+
+                <strong>
+                    ₹{{ "%.2f"|format(result.price_per_unit) }}
+                </strong>
+
+            </div>
+
+
+            <div class="total-row">
+
+                <span>Total Cost</span>
+
+                <strong>
+                    ₹{{ "%.2f"|format(result.total_cost) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
